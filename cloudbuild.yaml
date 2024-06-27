@@ -3,7 +3,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'build',
-      '-t', 'us-central1-docker.pkg.dev/data-workshops/media-corp-ott/html-app:latest',
+      '-t', 'us-central1-docker.pkg.dev/data-workshops/frontend-mediacorp/html-app:latest',
       '.'
     ]
 
@@ -11,20 +11,20 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'push',
-      'us-central1-docker.pkg.dev/data-workshops/mediacorp-frontend/html-app:latest'
+      'us-central1-docker.pkg.dev/data-workshops/frontend-mediacorp/html-app:latest'
     ]
 
   # Step 3: Deploy to Cloud Run
   - name: 'gcr.io/cloud-builders/gcloud'
     args: [
       'run', 'deploy', 'mediacorp-fronend',
-      '--image', 'us-central1-docker.pkg.dev/data-workshops/mediacorp-frontend/html-app:latest',
+      '--image', 'us-central1-docker.pkg.dev/data-workshops/frontend-mediacorp/html-app:latest',
       '--platform', 'managed',
       '--region', 'us-central1',
     ]
 
 images:
-  - 'us-central1-docker.pkg.dev/data-workshops/mediacorp-frontend/mediacorp_ott:latest'
+  - 'us-central1-docker.pkg.dev/data-workshops/frontend-mediacorp/html-app:latest'
 
 options:
   logging: CLOUD_LOGGING_ONLY
