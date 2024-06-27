@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MeWatch</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #141414;
+            color: white;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background-color: #1AA34A;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .navbar-left {
+            font-size: 28px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .navbar-center {
+            width: 50%;
+        }
+
+        .navbar-center input {
+            width: 100%;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 20px;
+            background-color: #333;
+            color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            outline: none;
+            font-size: 16px;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        .navbar-center input:focus {
+            background-color: #444;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-menu {
+            margin-left: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+        }
+
+        .movie-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .movie {
+            width: 200px;
+            margin: 10px;
+            border: 2px solid #333;
+            border-radius: 8px;
+            overflow: hidden;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .movie:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .movie img {
+            width: 100%;
+            height: auto;
+        }
+
+        .movie-name {
+            padding: 10px;
+            background-color: #1f1f1f;
+            font-weight: bold;
+        }
+
+        .chatbot-button {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            background-color: #1DB954;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .chatbot-button:hover {
+            background-color: #1AA34A;
+            transform: scale(1.1);
+        }
+
+        .chat-popup {
+            display: none;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #1f1f1f;
+            color: white;
+            width: 400px;
+            height: 500px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-popup header {
+            background-color: #1DB954;
+            color: white;
+            padding: 10px;
+            font-size: 18px;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-popup .chat-container {
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            flex-grow: 1;
+            overflow-y: auto;
+            background-color: #1f1f1f;
+        }
+
+        .chat-popup .chat-container p {
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 70%;
+            word-wrap: break-word;
+        }
+
+        .chat-popup .chat-container .bot-message,
+        .chat-popup .chat-container .user-message {
+            background-color: #333;
+            color: white;
+        }
+
+        .chat-popup .chat-container .bot-message {
+            align-self: flex-start;
+        }
+
+        .chat-popup .chat-container .user-message {
+            align-self: flex-end;
+            text-align: right;
+            background-color: #1DB954;
+            color: white;
+        }
+
+        .chat-popup .chat-container .typing {
+            align-self: flex-start;
+            background-color: #333;
+            color: white;
+            display: flex;
+            align-items: center;
+        }
+
+        .chat-popup .chat-container .typing::after {
+            content: "";
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            margin: 0 2px;
+            background-color: white;
+            border-radius: 50%;
+            animation: blink 1.4s infinite both;
+        }
+
+        @keyframes blink {
+            0%, 80%, 100% {
+                opacity: 0;
+            }
+            40% {
+                opacity: 1;
+            }
+        }
+
+        .chat-popup .chat-input {
+            display: flex;
+            border-top: 1px solid #333;
+            padding: 10px;
+            background-color: #1f1f1f;
+            border-radius: 0 0 10px 10px;
+        }
+
+        .chat-popup .chat-input select {
+            background-color: #444;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            margin-right: 10px;
+            width: 120px;
+        }
+
+        .chat-popup .chat-input input {
+            flex-grow: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 4px 0 0 4px;
+            background-color: #333;
+            color: white;
+        }
+
+        .chat-popup .chat-input button {
+            padding: 10px;
+            border: none;
+            background-color: #1DB954;
+            color: white;
+            cursor: pointer;
+            border-radius: 0 4px 4px 0;
+            transition: background-color 0.3s;
+        }
+
+        .chat-popup .chat-input button:hover {
+            background-color: #1AA34A;
+        }
+    </style>
+</head>
+
+<body>
+    <audio id="sendSound" src="sound.mp3"></audio>
+    <audio id="receiveSound" src="sound.mp3"></audio>
+
+    <div class="navbar">
+        <div class="navbar-left">MeWatch</div>
+        <div class="navbar-center">
+            <input type="text" placeholder="Search...">
+        </div>
+        <div class="navbar-right">
+            <div class="profile-menu">Profile</div>
+        </div>
+    </div>
+
+    <div class="movie-container">
+        <div class="movie" onclick="openMovieDetails('Inception')">
+            <img src="https://rukminim1.flixcart.com/image/300/300/l27wtjk0/poster/x/y/i/medium-inception-movie-hd-matte-finish-poster-butcutnw9954-original-imagdhw4azeedhbz.jpeg"
+                alt="Inception">
+            <div class="movie-name">Inception</div>
+        </div>
+        <div class="movie" onclick="openMovieDetails('Blade Runner')">
+            <img src="https://rukminim1.flixcart.com/image/300/300/jf8khow0/poster/g/m/d/small-hollywood-movie-poster-blade-runner-premium-quality-poster-original-imaf3qvwpcmsysbc.jpeg"
+                alt="Blade Runner">
+            <div class="movie-name">Blade Runner</div>
+        </div>
+        <div class="movie" onclick="openMovieDetails('Lord of War')">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAP1edknzYsCCXiY-6q2Y71-mpP00CzCNRbQ&s"
+                alt="Lord of War">
+            <div class="movie-name">Lord of War</div>
+        </div>
+        <div class="movie" onclick="openMovieDetails('Rocky')">
+            <img src="https://rukminim1.flixcart.com/image/300/300/jeek8sw0/poster/s/p/g/small-hollywood-movie-poster-iii-rocky-hollywood-collection-original-imaf32whevgccrwt.jpeg"
+                alt="Rocky">
+            <div class="movie-name">Rocky</div>
+        </div>
+    </div>
+
+    <button class="chatbot-button" onclick="openChat()">💬</button>
+
+    <div class="chat-popup" id="chatPopup">
+        <header>
+            Welcome User
+            <button onclick="closeChat()"
+                style="background: none; border: none; color: white; font-size: 20px; cursor: pointer;">&times;</button>
+        </header>
+        <div class="chat-container"></div>
+        <div class="chat-input">
+            <select id="chatLanguage">
+                <option value="en">English</option>
+                <option value="ms">Malay</option>
+                <option value="zh-CN">Chinese</option>
+                <option value="ta">Tamil</option>
+            </select>
+            <input type="text" id="chatInputField" placeholder="Type a message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('chatInputField').addEventListener('keypress', function (event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                sendMessage();
+            }
+        });
+
+        async function openChat() {
+            var chatPopup = document.getElementById("chatPopup");
+            chatPopup.style.display = "flex";
+
+            try {
+                let response = await fetch('http://34.36.185.195:8000/greetings?language=en');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                let data = await response.json();
+
+                var chatContainer = document.querySelector('.chat-container');
+                var greetingMessage = document.createElement('p');
+                greetingMessage.textContent = data.greet;
+                greetingMessage.classList.add('bot-message');
+                chatContainer.appendChild(greetingMessage);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                var chatContainer = document.querySelector('.chat-container');
+                var errorMessage = document.createElement('p');
+                errorMessage.textContent = "Error: Unable to fetch greeting.";
+                errorMessage.classList.add('bot-message');
+                chatContainer.appendChild(errorMessage);
+            }
+        }
+
+        function closeChat() {
+            var chatPopup = document.getElementById("chatPopup");
+            chatPopup.style.display = "none";
+        }
+
+        async function sendMessage() {
+            var language = document.getElementById('chatLanguage').value;
+            var inputField = document.querySelector('.chat-input input');
+            var message = inputField.value;
+            if (message.trim() !== "") {
+                var chatContainer = document.querySelector('.chat-container');
+
+                var userMessage = document.createElement('p');
+                userMessage.textContent = message;
+                userMessage.classList.add('user-message');
+                chatContainer.appendChild(userMessage);
+                inputField.value = "";
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+
+                document.getElementById('sendSound').play();
+
+                const body = {
+                    "query": message,
+                    "language": language
+                }
+
+                try {
+                    var typingIndicator = document.createElement('p');
+                    typingIndicator.textContent = "Typing...";
+                    typingIndicator.classList.add('typing');
+                    chatContainer.appendChild(typingIndicator);
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+
+                    let response = await fetch('http://34.36.185.195:8000/recommend_using_query', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(body)
+                    })
+
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+
+                    let data = await response.json();
+
+                    chatContainer.removeChild(typingIndicator);
+
+                    var botMessage = document.createElement('p');
+                    botMessage.textContent = data.response;
+                    botMessage.classList.add('bot-message');
+                    chatContainer.appendChild(botMessage);
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+
+                    document.getElementById('receiveSound').play();
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                    chatContainer.removeChild(typingIndicator);
+
+                    var errorMessage = document.createElement('p');
+                    errorMessage.textContent = "Error: Unable to fetch response.";
+                    errorMessage.classList.add('bot-message');
+                    chatContainer.appendChild(errorMessage);
+                }
+            }
+        }
+
+        function openMovieDetails(movieTitle) {
+            localStorage.setItem('movieTitle', movieTitle);
+            window.location.href = 'movie-details.html';
+        }
+    </script>
+</body>
+
+</html>
