@@ -323,7 +323,7 @@
             chatPopup.style.display = "flex";
 
             try {
-                let response = await fetch('http://34.36.185.195:8000/greetings?language=en');
+                let response = await fetch('https://mediacorp-ott-7kxckvikva-uc.a.run.app/greetings?language=en');
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -377,7 +377,7 @@
                     chatContainer.appendChild(typingIndicator);
                     chatContainer.scrollTop = chatContainer.scrollHeight;
 
-                    let response = await fetch('http://34.36.185.195:8000/recommend_using_query', {
+                    let response = await fetch('https://mediacorp-ott-7kxckvikva-uc.a.run.app/recommend_using_query', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'

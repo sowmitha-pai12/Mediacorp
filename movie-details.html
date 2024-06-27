@@ -523,9 +523,9 @@
         async function openChatPopup() {
             var chatPopup = document.getElementById("chatPopup");
             chatPopup.style.display = "flex";
-
+            
             try {
-                let response = await fetch('http://34.36.185.195:8000/greetings?language=en');
+                let response = await fetch('https://mediacorp-ott-7kxckvikva-uc.a.run.app/greetings?language=en');
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -579,7 +579,7 @@
                     chatContainer.appendChild(typingIndicator);
                     chatContainer.scrollTop = chatContainer.scrollHeight;
 
-                    let response = await fetch('http://34.36.185.195:8000/recommend_using_query', {
+                    let response = await fetch('https://mediacorp-ott-7kxckvikva-uc.a.run.app/recommend_using_query', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -636,7 +636,7 @@
                 var formData = new FormData();
                 formData.append('file', file);
 
-                fetch('http://34.120.70.34:8000/upload', {
+                fetch('https://mediacorp-7kxckvikva-uc.a.run.app/upload', {
                     method: 'POST',
                     headers: {
                         'accept': 'application/json'
@@ -700,7 +700,7 @@
                 return;
             }
 
-            var apiUrl = "http://34.120.70.34:8000/transcribe_and_translate";
+            var apiUrl = "https://mediacorp-7kxckvikva-uc.a.run.app/transcribe_and_translate";
 
             console.log("Starting transcription for:", gcsUrl);
             console.log("Using API URL:", apiUrl);
